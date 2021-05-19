@@ -372,6 +372,138 @@ def mergeKLists(lists):
     return res_head.next
 
 
+'''
+Quick sort on Linked List
+
+Time complexity: O(nlogn) on average
+Space complexity: O(logn)
+
+Input examples: 
+4 -> 2 -> 1 -> 3 -> None
+4 -> 3 -> 2 -> 1 -> None
+'''
+def sortList(self, head):
+    if not head:
+        return None
+    return self.quick_sort(head, head, None)
+
+
+'''
+pivot: 1
+high: 3
+low: 1
+'''
+def quick_sort(self, head, low, high):
+    if low == high:
+        return
+    pivot = self.partition(low, high)
+    self.quick_sort(head, pivot.next, high)
+    self.quick_sort(head, low, pivot)
+    return head
+
+
+'''
+pivot: 2
+smaller: 3
+curr: 4
+high: 4
+1 -> 2 -> 3 -> 4 -> None
+'''
+def partition(self, head, high):
+    if not head:
+        return None
+    pivot = head
+    smaller = head  # pointer to store every element smaller than the pivot
+    curr = head.next
+    while curr and curr != high:
+        if curr.val < pivot.val:
+            smaller = smaller.next  # increment to store the next smaller
+            aux = smaller.val
+            smaller.val = curr.val
+            curr.val = aux
+        curr = curr.next
+
+    aux = smaller.val
+    smaller.val = pivot.val
+    pivot.val = aux
+    return smaller
+
+
+'''
+Merge sort on Linked List
+https://leetcode.com/problems/sort-list/
+
+Time complexity: O(nlogn)
+Space complexity: O(n)
+
+Find the middle with a two pointer approach (traverse one time)
+take care of the low, high and middle pointers
+
+Input examples: 
+4 -> 2 -> 1 -> 3 -> None
+4 -> 3 -> 2 -> 1 -> None
+'''
+def sortList2(self, head):
+    if not head:
+        return None
+    self.merge_sort(head, None)
+    return head
+
+
+def merge_sort(self, low, high):  # 4 1
+    if low.next == high:
+        return
+    mid = self.find_middle(low, high)  # 2; 4
+
+    self.merge_sort(low, mid.next)
+    self.merge_sort(mid.next, high)
+
+    res_head = Node(None)  # dummy node # None -> 2
+    res_curr = res_head
+    curr1 = low  # 4
+    curr2 = mid.next  # 2
+    while curr1 != mid.next and curr2 != high:
+        if curr1.val < curr2.val:
+            res_curr.next = Node(curr1.val)
+            curr1 = curr1.next
+        else:
+            res_curr.next = Node(curr2.val)
+            curr2 = curr2.next
+        res_curr = res_curr.next
+
+    while curr1 != mid.next:
+        res_curr.next = Node(curr1.val)
+        curr1 = curr1.next
+        res_curr = res_curr.next
+
+    while curr2 != high:
+        res_curr.next = Node(curr2.val)
+        curr2 = curr2.next
+        res_curr = res_curr.next
+
+    # copying everything back to the original linked list
+    curr = low
+    res_curr = res_head.next
+    while curr != high:
+        curr.val = res_curr.val
+        curr = curr.next
+        res_curr = res_curr.next
+
+
+# 4 -> 2 -> 1 -> 3 -> None
+def find_middle(self, head, high):  # 4 None
+    if not head or head == high:
+        return head
+
+    one_step = head  # 4
+    two_step = head.next  # 2
+    while two_step and two_step != high and two_step.next and two_step.next != high:
+        one_step = one_step.next
+        two_step = two_step.next.next
+
+    return one_step
+
+
 lst = LinkedList()
 lst.insert(2)
 lst.insert(6)
