@@ -248,7 +248,7 @@ def findKthMaxRecursive(root, k):
 Time complexity: O(n)
 Space complexity: O(n)
 
-In case of a bst the recursive part could be altered by going towards just the right path, this would made the time 
+In case of a bst the recursive part could be altered by going towards just the correct path, this would made the time 
 complexity O(log n) in best case 
 '''
 def findAncestors(root, k):
