@@ -321,6 +321,48 @@ def intersection(list1, list2):
     return list2
 
 
+'''
+Find the longest substring with k unique characters in a given string
+
+"aabbcc", k = 1
+Max substring can be any one from {"aa" , "bb" , "cc"}.
+
+"aabbcc", k = 2
+Max substring can be any one from {"aabb" , "bbcc"}.
+
+"aabbcc", k = 3
+There are substrings with exactly 3 unique characters
+{"aabbcc" , "abbcc" , "aabbc" , "abbc" }
+Max is "aabbcc" with length 6.
+
+"aaabbb", k = 3
+There are only two unique characters, thus show error message. 
+
+Time complexity: O(n)
+Space complexity: O(n)
+'''
+def longest_sub_k_unique(str, k):
+    if not str or k <= 0: # aabbcc k=1
+        return ''
+    max_len = 0
+    longest_sub = ''
+    start = 0
+    end = 0
+    uniques = set()
+    while end < len(str):
+        uniques.add(str[end])
+        if len(uniques) == k:
+            max_len = max(max_len, end-start+1)
+            longest_sub = str[start:end+1]
+        while len(uniques) > k:
+            # could be done counting the occurrences into a hash_map, maybe this part would be more readable
+            uniques.remove(str[start])
+            start += 1
+            uniques.add(str[start])
+        end += 1
+    return longest_sub
+
+
 hashtable = HashTable()
 hashtable.insert('hey', 1)
 hashtable.insert('hi', 2)
@@ -353,3 +395,7 @@ print(len(hashtable.buckets), hashtable.curr_size)
 print(hashtable.buckets)
 print(is_formation_possible(['hey'], 'hey'))
 print(is_formation_possible(['he', 'y'], 'hey'))
+print(longest_sub_k_unique("aabbcc", 1))
+print(longest_sub_k_unique("aabbcc", 2))
+print(longest_sub_k_unique("aabbcc", 3))
+print(longest_sub_k_unique("aaabbb", 3))

@@ -1,3 +1,5 @@
+import heapq
+
 class Node:
     def __init__(self, val):
         self.val = val
@@ -288,6 +290,87 @@ def find_nth_twopointers(lst, n):
         rightpointer = rightpointer.next
 
     return rightpointer.val
+
+
+'''
+Reverse Nodes in k-Group
+https://leetcode.com/problems/reverse-nodes-in-k-group/
+
+pretty nice example of divide and conquer
+Time complexity: O(n) where n is the number of elements
+Space complexity: O(1)
+'''
+def reverseKGroup(head, k):
+    head = reverse_linked_list(head, k)
+    curr = head
+    count = 0
+    while curr:
+        if count < k - 1:
+            count += 1
+        else:
+            count = 0
+            curr.next = reverse_linked_list(curr.next, k)
+        curr = curr.next
+    return head
+
+
+# 2 -> 1 -> 4 -> 3
+def reverse_linked_list(head, k):  # 0
+    if not head:  # 3
+        return head
+    # check if there are k elements, base case for left-out nodes
+    count = 0
+    curr = head
+    while curr and count < k:
+        count += 1
+        curr = curr.next
+    if count < k:
+        return head
+
+    # reversing the list
+    prev = None  # 4 -> 3 -> None
+    curr = head  # 5
+    next = None  # 5
+    while curr and k > 0:
+        next = curr.next
+        curr.next = prev
+        prev = curr
+        curr = next
+        k -= 1
+
+    head.next = curr
+    return prev
+
+
+'''
+Merge k Sorted Lists
+https://leetcode.com/problems/merge-k-sorted-lists/
+
+Time complexity: O(n*logk) where n is the total number of elements and k is the number of lists
+Space complexity: O(n)
+'''
+def mergeKLists(lists):
+    res_head = Node(-1)
+    min_heap = []
+
+    for k in range(len(lists)):
+        head = lists[k]
+        if not head:
+            continue
+        heapq.heappush(min_heap, (head.val, k))
+
+    res_curr = res_head
+    while min_heap:
+        val, k = heapq.heappop(min_heap)
+        lists[k] = lists[k].next
+        node = lists[k]
+        if node:
+            heapq.heappush(min_heap, (node.val, k))
+        res_curr.next = Node(val)
+        res_curr = res_curr.next
+
+    return res_head.next
+
 
 lst = LinkedList()
 lst.insert(2)
