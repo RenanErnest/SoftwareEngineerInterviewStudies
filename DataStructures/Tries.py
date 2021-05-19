@@ -79,8 +79,8 @@ class Trie:
             parent = ancestors.pop()
             if self.check_if_any_child(curr) or curr.is_end_word:
                 return True
-            parent_index = ord(curr.char) - ord('a')
-            parent.children[parent_index] = None
+            curr_index = ord(curr.char) - ord('a')
+            parent.children[curr_index] = None
             curr = parent
         return True
 
