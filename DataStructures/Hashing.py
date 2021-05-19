@@ -149,7 +149,7 @@ def trace_path(my_dict):  # A Map object
 
 
 '''
-Find two pairs, [a, b] and [c, d], in a list such that : a+b = c+da+b=c+d
+Find two pairs, [a, b] and [c, d], in a list such that : a+b = c+d and a+b=c+d
 Time complexity: O(n^2)
 Space complexity: O(n^2)
 '''
