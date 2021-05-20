@@ -300,6 +300,58 @@ def findNodesAtKthLevel(root, k, result):
     findNodesAtKthLevel(root.rightChild, k - 1, result)
 
 
+class FourAryTreeNode:
+    def __init__(self, val):
+        self.val = val
+        self.children = [None] * 4
+
+    def print(self):
+        print(self.val, end='')
+        for child in self.children:
+            if child:
+                child.print()
+
+
+'''
+Serialize and deserialize n-ary tree
+Time complexity: O(n) where n is the number of nodes in the tree
+Space complexity: O(n)
+'''
+def serialize(root):
+    return serialize_recursive(root, '')
+
+def serialize_recursive(root, s):
+    if not root:
+        return ''
+    s += str(root.val)
+    for i in range(len(root.children)):
+        if root.children[i]:
+            s = serialize_recursive(root.children[i], s)
+        else:
+            s += '|'
+
+    return s
+
+
+def deserialize(s):
+    if not s:
+        return None
+    global index
+    index = 0
+    return deserialize_recursive(s)
+
+
+def deserialize_recursive(s):
+    global index
+    root = FourAryTreeNode(s[index])
+    index += 1
+    for i in range(len(root.children)):
+        if index < len(s) and s[index] != '|':
+            root.children[i] = deserialize_recursive(s)
+        index += 1
+    return root
+
+
 root = Node(5)
 bst_insert_iterative(root, 3)
 bst_insert_iterative(root, 7)
@@ -330,3 +382,7 @@ print(bst_search(root, 6))
 print(bst_search(root, 10))
 print(bst_search(root, 3))
 print(bst_search(root, 5))
+
+fourAryTree = 'ABE|FK|||C|DG|H|I|J||||||||||||||||||||||||||'
+root = deserialize(fourAryTree)
+print(root.print(), fourAryTree, serialize(root), serialize(root) == serialize(deserialize(serialize(root))))
