@@ -348,7 +348,8 @@ def deserialize_recursive(s):
     for i in range(len(root.children)):
         if index < len(s) and s[index] != '|':
             root.children[i] = deserialize_recursive(s)
-        index += 1
+        else:
+            index += 1
     return root
 
 
@@ -383,6 +384,6 @@ print(bst_search(root, 10))
 print(bst_search(root, 3))
 print(bst_search(root, 5))
 
-fourAryTree = 'ABE|FK|||C|DG|H|I|J||||||||||||||||||||||||||'
+fourAryTree = 'ABE|FK|||C|DG|H|I|J||||||||||||Y||||||||||||||'
 root = deserialize(fourAryTree)
 print(root.print(), fourAryTree, serialize(root), serialize(root) == serialize(deserialize(serialize(root))))
