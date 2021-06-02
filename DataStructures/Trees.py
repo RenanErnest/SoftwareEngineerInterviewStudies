@@ -353,6 +353,90 @@ def deserialize_recursive(s):
     return root
 
 
+'''
+Find the inorder successor of determined key in a bst
+Time complexity: O(n)
+Space complexity: O(n)
+'''
+def find_inorder_successor(root, key):
+    global found, successor
+    found = False
+    successor = None
+    retrieve_inorder_successor(root, key)
+    return successor
+
+
+def retrieve_inorder_successor(root, key):
+    if not root:
+        return None
+
+    global found, successor
+
+    retrieve_inorder_successor(root.left)
+
+    if root.val == key:
+        found = True
+
+    retrieve_inorder_successor(root.right)
+
+    if found:
+        successor = root.val
+        found = False
+
+'''
+- find the key
+- if the key has a right child: find the left-most node of the right child and return it
+- if the key has no right child: in this case we should return its first grandparent that is greater than it
+
+Note: I realized I can search the key storing the potential successor in the case the key_node doesn't have a right child
+
+Time complexity: O(d) where d is level of the tree where the inorder successor of the key is found, in the worst case O(n)
+Space complexity: O(1)
+'''
+def find_inorder_successor_iterative(root, key):
+    # search the key alongside with keeping the potential successor
+    potential_successor = None
+    key_node = root
+    while key_node:
+        if key < key_node.val:
+            potential_successor = key_node.val
+            key_node = key_node.left
+        elif key > key_node.val:
+            key_node = key_node.right
+        else:
+            break
+    if not key_node:
+        return None
+
+    if key_node.right:
+        return most_left_child(key_node.right)
+
+    return potential_successor
+
+
+def most_left_child(root):
+    if not root:
+        return None
+    while root.left:
+        root = root.left
+    return root
+
+
+def calculate_cost_of_building_a_full_binary_tree(arr):
+    cost = 0
+    while len(arr) > 1:
+        minimum = min(arr)
+        min_index = arr.index(minimum)
+        if min_index > 0 and min_index < len(arr)-1:
+            cost += arr[min_index] * min(arr[min_index-1], arr[min_index+1])
+        elif min_index < len(arr)-1:
+            cost += arr[min_index] * arr[min_index+1]
+        else:
+            cost += arr[min_index] * arr[min_index-1]
+        arr.pop(min_index) # removing the minimum value to prevent it to participate in future calculus
+    return cost
+
+
 root = Node(5)
 bst_insert_iterative(root, 3)
 bst_insert_iterative(root, 7)
@@ -387,3 +471,8 @@ print(bst_search(root, 5))
 fourAryTree = 'ABE|FK|||C|DG|H|I|J||||||||||||Y||||||||||||||'
 root = deserialize(fourAryTree)
 print(root.print(), fourAryTree, serialize(root), serialize(root) == serialize(deserialize(serialize(root))))
+
+print(calculate_cost_of_building_a_full_binary_tree([4,6,2]))
+print(calculate_cost_of_building_a_full_binary_tree([2,1]))
+print(calculate_cost_of_building_a_full_binary_tree([5,3,1]))
+print(calculate_cost_of_building_a_full_binary_tree([1,5,3]))
